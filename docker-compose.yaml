@@ -1,0 +1,47 @@
+services:
+
+  pocket-id:
+    image: pocketid/pocket-id:${POCKET_ID_VERSION:-latest}
+    env_file: environment.d/pocket-id.env
+    environment:
+      DB_CONNECTION_STRING: postgresql://${DATABASE_USER:-pocketid}:${DATABASE_PASSWORD}@${DATABASE_HOST:-database}:${DATABSE_PORT:-5432}/${DATABASE_NAME:-pocketid}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+    ports:
+      - ${POCKET_ID_PORT:-1411}:1411
+    volumes:
+      - ${POCKET_ID_VOLUME:-pocket-id-data}:/app/data
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ['CMD', '/app/pocket-id', 'healthcheck']
+    depends_on: [database]
+    restart: unless-stopped
+
+  database:
+    image: postgres:${POSTGRESS_IMAGE_VERSION:-18}
+    env_file: environment.d/postgres.env
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-pocketid}
+      POSTGRES_USER: ${DATABASE_USER:-pocketid}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ${DATABASE_VOLUME:-postgres-data}:/var/lib/postgresql
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+
+  watchtower:
+    image: nickfedor/watchtower:${WATCHTOWER_VERSION:-latest}
+    env_file: environment.d/watchtower.env
+    environment:
+      WATCHTOWER_SCOPE: ${COMPOSE_PROJECT_NAME}
+    volumes:
+      - ${DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+
+volumes:
+  pocket-id-data: {}
+  postgres-data: {}
