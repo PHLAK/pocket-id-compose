@@ -22,6 +22,19 @@ Installation
 
   5. Run `docker compose up -d` to start the containers
 
+Configuration
+-------------
+
+Your Pocket ID installation can be configured by adding environment variables to
+the `environment.d/pocket-id.env` file.
+
+See the [Environment Variables](https://pocket-id.org/docs/configuration/environment-variables)
+for the list of available environment variables and what they do.
+
+> [!IMPORTANT]
+> After modifying `environment.d/pocket-id.env` you must restart your containers
+> (i.e. `docker compose up -d`) for the changes to apply.
+
 Updating
 --------
 
@@ -37,16 +50,3 @@ Updating
 
          docker compose pull
          docker compose up -d
-
-Configuration
--------------
-
-Your Pocket ID installation can be configured by adding environment variables to
-the `environment.d/pocket-id.env` file.
-
-See the [Environment Variables](https://pocket-id.org/docs/configuration/environment-variables)
-for the list of available environment variables and what they do.
-
-> [!IMPORTANT]
-> After modifying `environment.d/pocket-id.env` you must restart your containers
-> (i.e. `docker compose up -d`) for the changes to apply.
