@@ -1,2 +1,13 @@
-/.env
+# --------------------------------------
+# Application configuration files
+# --------------------------------------
+
 /environment.d/*
+/.env
+
+# --------------------------------------
+# User-generated files
+# --------------------------------------
+
+/docker-compose.override.yaml
+/docker-compose.override.yml
